@@ -8,7 +8,7 @@ interface Props {}
 
 const Nav = createNativeStackNavigator();
 
-export default function InNav(props: Props) {
+export default function Main(props: Props) {
   return (
     <Nav.Navigator screenOptions={{ headerShown: false }}>
       <Nav.Screen name="Tabs" component={Tabs} />
