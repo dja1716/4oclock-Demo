@@ -36,12 +36,12 @@ interface Fetchers<T> {
 }
 
 export const CharactersApi: Fetchers<CharactersResponse> = {
-  Characters: async () => {
+  Characters: async ({ pageParam }) => {
     const ts = Number(new Date());
     const hash = md5.create();
     hash.update(ts + PRIVATE_KEY + API_KEY);
     const response = await fetch(
-      `${BASE_URL}/characters?ts=${ts}&orderBy=-modified&apikey=${API_KEY}&hash=${hash.hex()}`
+      `${BASE_URL}/characters?ts=${ts}&orderBy=-modified&apikey=${API_KEY}&hash=${hash.hex()}&limit=30&offset=${pageParam}`
     ).then((res) => res.json());
     return response;
   },

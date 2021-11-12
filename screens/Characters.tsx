@@ -1,5 +1,5 @@
 import styled from "styled-components/native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CharacterV from "../components/CharacterV";
 import { Dimensions, FlatList, View } from "react-native";
 import { CharactersResponse, CharactersApi, Character } from "../api";
@@ -16,30 +16,59 @@ interface Props {}
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 const backgroundImage = require("../sources/AvengersA.png");
 export default function Characters(props: Props) {
+  const [refreshing, setRefreshing] = useState(false);
   const queryClient = useQueryClient();
 
   const {
     data: charactersData,
     isLoading,
     isRefetching,
-  } = useQuery<CharactersResponse>(
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery<CharactersResponse>(
     ["characters", "allCharacters"],
-    CharactersApi.Characters
-  );
-  useEffect(() => {
-    if (charactersData) {
-      console.log(charactersData);
+    CharactersApi.Characters,
+    {
+      getNextPageParam: (cur) => {
+        const next = cur.data.offset + cur.data.count;
+        return next > cur.data.total ? null : next;
+      },
     }
-  }, [charactersData]);
-  console.log(SCREEN_WIDTH * 0.5);
+  );
+  const loadMore = () => {
+    if (hasNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await queryClient.refetchQueries(["characters", "allCharacters"]);
+    setRefreshing(false);
+  };
   return (
     <Container>
-      {charactersData ? (
+      {charactersData && charactersData.pages ? (
         <FlatList
-          data={charactersData.data.results}
-          ItemSeparatorComponent={Separator}
+          onEndReached={loadMore}
+          onEndReachedThreshold={0.4}
+          onRefresh={onRefresh}
+          refreshing={refreshing}
+          data={charactersData.pages.map((page) => page.data.results).flat()}
           contentContainerStyle={{ paddingVertical: 30 }}
-          renderItem={({ item }) => <CharacterV name={item.name} />}
+          renderItem={({ item }) => {
+            if (item.thumbnail.path.includes("image_not_available")) {
+              return null;
+            }
+            return (
+              <CharacterV
+                name={item.name}
+                description={item.description}
+                path={item.thumbnail.path}
+                extension={item.thumbnail.extension}
+              />
+            );
+          }}
         />
       ) : null}
       <Background source={backgroundImage} />
