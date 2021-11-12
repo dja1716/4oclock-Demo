@@ -15,11 +15,11 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <NavigationContainer>
-          <Main />
-        </NavigationContainer>
-      </SafeAreaView>
+      {/* <SafeAreaView style={{ flex: 1 }}> */}
+      <NavigationContainer>
+        <Main />
+      </NavigationContainer>
+      {/* </SafeAreaView> */}
     </QueryClientProvider>
   );
 }
