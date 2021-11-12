@@ -2,14 +2,16 @@ import styled from "styled-components/native";
 import React from "react";
 import { Dimensions } from "react-native";
 
-interface Props {}
+interface Props {
+  name: string;
+}
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-export default function CharacterV(props: Props) {
+export default function CharacterV({ name }: Props) {
   return (
     <Container>
-      <Title>Characters</Title>
+      <Title>{name}</Title>
     </Container>
   );
 }
@@ -23,11 +25,10 @@ const Title = styled.Text`
 `;
 
 const Container = styled.View`
-  height: 90%;
-  margin: 10%;
+  height: 100px;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
-  width: ${SCREEN_WIDTH - 20};
+  width: ${SCREEN_WIDTH - 20}px;
   padding: 20px;
 `;
 

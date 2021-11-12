@@ -20,3 +20,5 @@ const Container = styled.View`
   flex: 1;
   background-color: white;
 `;
+
+const BigImage = styled.Image``;
