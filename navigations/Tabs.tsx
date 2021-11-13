@@ -1,7 +1,7 @@
 import styled from "styled-components/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Characters from "../screens/Characters";
-import Chat from "../screens/Chat";
+import Comics from "../screens/Comics";
 import Profile from "../screens/Profile";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -34,7 +34,15 @@ export default function Tabs(props: Props) {
           },
         }}
       />
-      <Tab.Screen name="Chat" component={Chat} />
+      <Tab.Screen
+        name="Comics"
+        component={Comics}
+        options={{
+          tabBarIcon: ({ color, size }) => {
+            return <Ionicons name="book" size={size} color={color} />;
+          },
+        }}
+      />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );

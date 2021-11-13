@@ -14,3 +14,5 @@ export default function Profile(props: Props) {
 const View = styled.View``;
 
 const Text = styled.Text``;
+
+// const Container = styled.

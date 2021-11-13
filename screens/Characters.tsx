@@ -13,7 +13,6 @@ import {
 
 interface Props {}
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 const backgroundImage = require("../sources/AvengersA.png");
 export default function Characters(props: Props) {
   const [refreshing, setRefreshing] = useState(false);
@@ -21,8 +20,6 @@ export default function Characters(props: Props) {
 
   const {
     data: charactersData,
-    isLoading,
-    isRefetching,
     hasNextPage,
     fetchNextPage,
   } = useInfiniteQuery<CharactersResponse>(
@@ -56,6 +53,7 @@ export default function Characters(props: Props) {
           refreshing={refreshing}
           data={charactersData.pages.map((page) => page.data.results).flat()}
           contentContainerStyle={{ paddingVertical: 30 }}
+          keyExtractor={(item) => item.id + ""}
           renderItem={({ item }) => {
             if (item.thumbnail.path.includes("image_not_available")) {
               return null;

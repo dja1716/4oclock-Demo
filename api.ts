@@ -14,7 +14,16 @@ export interface Character {
   id: number;
   name: string;
   description: string;
-  thumbnail: thumbnail[];
+  thumbnail: thumbnail;
+}
+
+export interface Comics {
+  id: number;
+  title: string;
+  description: string | null;
+  pageCount: number;
+  thumbnail: thumbnail;
+  images: thumbnail[];
 }
 
 interface BaseResponse {
@@ -24,9 +33,16 @@ interface BaseResponse {
   count: number;
 }
 
+export interface ComicsInnerResponse extends BaseResponse {
+  results: Comics[];
+}
 export interface CharactersInnerResponse extends BaseResponse {
   results: Character[];
 }
+export interface ComicsResponse {
+  data: ComicsInnerResponse;
+}
+
 export interface CharactersResponse {
   data: CharactersInnerResponse;
 }
@@ -42,6 +58,18 @@ export const CharactersApi: Fetchers<CharactersResponse> = {
     hash.update(ts + PRIVATE_KEY + API_KEY);
     const response = await fetch(
       `${BASE_URL}/characters?ts=${ts}&orderBy=-modified&apikey=${API_KEY}&hash=${hash.hex()}&limit=30&offset=${pageParam}`
+    ).then((res) => res.json());
+    return response;
+  },
+};
+
+export const ComicsApi: Fetchers<ComicsResponse> = {
+  Comics: async ({ pageParam }) => {
+    const ts = Number(new Date());
+    const hash = md5.create();
+    hash.update(ts + PRIVATE_KEY + API_KEY);
+    const response = await fetch(
+      `${BASE_URL}/comics?ts=${ts}&apikey=${API_KEY}&hash=${hash.hex()}`
     ).then((res) => res.json());
     return response;
   },
