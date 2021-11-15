@@ -1,9 +1,11 @@
 import styled from "styled-components/native";
 import React, { useEffect, useState } from "react";
 import CharacterV from "../components/CharacterV";
-import { Dimensions, FlatList, View } from "react-native";
+import { Dimensions, FlatList, View, TouchableOpacity } from "react-native";
 import { CharactersResponse, CharactersApi, Character } from "../api";
-
+import { useNavigation } from "@react-navigation/native";
+import { MainStackParamList } from "../navigations/Main";
+import { Ionicons } from "@expo/vector-icons";
 import {
   useQuery,
   QueryClient,
@@ -15,6 +17,7 @@ interface Props {}
 
 const backgroundImage = require("../sources/AvengersA.png");
 export default function Characters(props: Props) {
+  const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
   const queryClient = useQueryClient();
 
@@ -37,6 +40,18 @@ export default function Characters(props: Props) {
       fetchNextPage();
     }
   };
+  const MessagesButton = () => (
+    <TouchableOpacity
+      style={{ marginRight: 18 }}
+      onPress={() => navigation.navigate("Messages")}
+    >
+      <Ionicons name="paper-plane" color="gold" size={24} />
+    </TouchableOpacity>
+  );
+
+  useEffect(() => {
+    navigation.setOptions({ headerRight: MessagesButton });
+  }, []);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -47,6 +62,7 @@ export default function Characters(props: Props) {
     <Container>
       {charactersData && charactersData.pages ? (
         <FlatList
+          showsHorizontalScrollIndicator={false}
           onEndReached={loadMore}
           onEndReachedThreshold={0.4}
           onRefresh={onRefresh}
