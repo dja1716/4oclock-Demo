@@ -2,12 +2,16 @@ import styled from "styled-components/native";
 import React, { useEffect, useRef, useState } from "react";
 import {
   useQuery,
-  QueryClient,
   useQueryClient,
-  useInfiniteQuery,
 } from "react-query";
 import { ComicsResponse, ComicsApi } from "../api";
-import { Animated, PanResponder, View, Image } from "react-native";
+import {
+  Animated,
+  PanResponder,
+  View,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import ComicsCard from "../components/ComicsCard";
 
 interface Props {}
@@ -113,7 +117,7 @@ export default function Comics(props: Props) {
       Promise.all(preFetchTasks).then((results) => setReady(true));
     }
   }, [comicsData]);
-  if (!ready || isLoading) return <View></View>;
+  if (!ready || isLoading) return <ActivityIndicator />;
   return (
     <Container>
       <CardContainer>
